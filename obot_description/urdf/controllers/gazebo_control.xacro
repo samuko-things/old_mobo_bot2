@@ -32,7 +32,7 @@
 
             <ros>
                 <!-- <namespace>/br</namespace> -->
-                <remapping>odom:=wheel/odometry</remapping>
+                <!-- <remapping>odom:=wheel/odometry</remapping> -->
             </ros>
 
         </plugin>

@@ -13,7 +13,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # delare any path variable
-    my_pkg_path = get_package_share_directory('mobo_bot2_description')
+    my_pkg_path = get_package_share_directory('obot_description')
     rviz_config_file = os.path.join(my_pkg_path,'config','robot_view.rviz')
 
     # create needed nodes or launch files

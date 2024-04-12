@@ -7,12 +7,12 @@
     <xacro:property name="scan_angle" value="1"/> -->
 
 
-    <xacro:macro name="insert_sonar" params="base_name parent_name x y z mass min_range max_range resolution visualize">
+    <xacro:macro name="insert_sonar" params="base_name parent_name x y z rx ry rz mass min_range max_range resolution visualize">
 
         <joint name="${base_name}_joint" type="fixed">
             <parent link="${parent_name}"/>
             <child link="${base_name}"/>
-            <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${rx} ${ry} ${rz}"/>
         </joint>
 
         <link name="${base_name}">

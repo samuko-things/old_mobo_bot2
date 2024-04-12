@@ -6,9 +6,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
 from launch_ros.actions import Node
-
 
 
 def generate_launch_description():
@@ -17,11 +15,10 @@ def generate_launch_description():
     # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
     # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
 
-    package_name='mobo_bot2_description' #<--- CHANGE ME
+    package_name='obot_description' #<--- CHANGE ME
     
-    world_file_name = 'test_world.world'
+    world_file_name = 'empty.world'
     world_path = os.path.join(get_package_share_directory(package_name), 'world', world_file_name)
-    
     
     declare_world_cmd = DeclareLaunchArgument(
             'world',
@@ -29,23 +26,13 @@ def generate_launch_description():
             description='SDF world file',
         )
 
-
     use_sim_time = 'true'
-
+    
     rsp = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [os.path.join(get_package_share_directory(package_name),'launch','rsp.launch.py')]
             ), 
             launch_arguments={'use_sim_time': use_sim_time}.items()
-    )
-
-
-    rviz_config_file = os.path.join(get_package_share_directory(package_name),'config','robot_view_sim.rviz')
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        arguments=['-d', rviz_config_file],
-        output='screen'
     )
 
     gazebo_params_file = os.path.join(get_package_share_directory(package_name),'config','gazebo_params.yaml')
@@ -59,7 +46,7 @@ def generate_launch_description():
              )
 
 
-    robot_name = 'mobo_bot2'
+    robot_name = 'obot'
     # initial spawn position
     x_pos = 0; y_pos = 0; z_pos = 0
     #initial spawn orientation
@@ -87,9 +74,7 @@ def generate_launch_description():
     
     # Add the nodes to the launch description
     ld.add_action(rsp)
-    ld.add_action(rviz_node)
     ld.add_action(gazebo)
     ld.add_action(spawn_entity)
-
     
     return ld      # return (i.e send) the launch description for excecution

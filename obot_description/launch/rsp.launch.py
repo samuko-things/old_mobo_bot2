@@ -24,7 +24,7 @@ def generate_launch_description():
     )
 
     # Process the URDF file
-    pkg_path = os.path.join(get_package_share_directory('mobo_bot2_description'))
+    pkg_path = os.path.join(get_package_share_directory('obot_description'))
     xacro_file = os.path.join(pkg_path,'urdf','robot_urdf.xacro')
     
     # robot_description_config= Command(['xacro ', xacro_file, ' use_ros2_control:=', use_ros2_control])

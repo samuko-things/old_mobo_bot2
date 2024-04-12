@@ -8,21 +8,24 @@
     
     <xacro:include filename="sensors/sonar.xacro"/>
     <xacro:include filename="sensors/lidar.xacro"/>
-    <!-- <xacro:include filename="sensors/imu.xacro"/> -->
-    <!-- <xacro:include filename="sensors/cam.xacro"/> -->
+    <xacro:include filename="sensors/imu.xacro"/>
+    <xacro:include filename="sensors/cam.xacro"/>
 
 
-    <xacro:property name="chassis_length" value="0.25"/>
-    <xacro:property name="chassis_width" value="0.19"/>
-    <xacro:property name="chassis_height" value="0.07"/>
-    <xacro:property name="chassis_mass" value="3.0"/>
+    <xacro:property name="chassis_radius" value="0.13"/>
+    <xacro:property name="chassis_thickness" value="0.005"/>
+    <xacro:property name="chassis_mass" value="2.0"/>
+    <xacro:property name="beam_height" value="0.05"/>
+    <xacro:property name="beam_radius" value="0.005"/>
+    <xacro:property name="chassis_color" value="orange"/>
+
 
     <xacro:property name="wheel_seperation" value="0.22"/>
     <xacro:property name="wheel_radius" value="0.034"/>
     <xacro:property name="wheel_width" value="0.026"/>
     <xacro:property name="wheel_mass" value="0.08"/>
 
-    <xacro:property name="castor_wheel_radius" value="0.034"/>
+    <xacro:property name="castor_wheel_radius" value="${wheel_radius/2}"/>
     <xacro:property name="castor_wheel_mass" value="0.04"/>
 
     
@@ -44,9 +47,6 @@
 
 
 
-
-
-
     <!-- CHASSIS LINK -->
 
     <joint name="chassis_joint" type="fixed">
@@ -55,21 +55,75 @@
         <origin xyz="0 0 ${wheel_radius}"/>
     </joint>
 
+
+
     <link name="chassis">
-        <xacro:insert_box_with_fillet x="${-chassis_length/6}" y="0" z="${chassis_height/2}" 
-            size_x="${chassis_length}" size_y="${chassis_width}" size_z="${chassis_height}" 
-            fillet_radius="0.06" material="orange"/>
-        <collision>
-           <origin xyz="${-chassis_length/6} 0 ${chassis_height/2}" rpy="0 0 0"/>
-            <geometry>
-                <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
-            </geometry>
-        </collision>
-        <xacro:inertial_box mass="${chassis_mass}" x="${chassis_length}" y="${chassis_width}" z="${chassis_height}">
-            <origin xyz="${-chassis_length/6} 0 ${wheel_radius*2}" rpy="0 0 0"/>
-        </xacro:inertial_box>
+
+      <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${chassis_radius}" length="${chassis_thickness}"/>
+          </geometry>
+          <material name="${chassis_color}"/>
+      </visual>
+      <visual>
+          <origin xyz="0 0 ${beam_height}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${chassis_radius}" length="${chassis_thickness}"/>
+          </geometry>
+          <material name="${chassis_color}"/>
+      </visual>
+      <visual>
+          <origin xyz="0 0 ${beam_height*2}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${chassis_radius}" length="${chassis_thickness}"/>
+          </geometry>
+          <material name="${chassis_color}"/>
+      </visual>
+
+
+      <visual>
+          <origin xyz="${chassis_radius/2} ${chassis_radius/2} ${beam_height}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
+          </geometry>
+          <material name="${chassis_color}"/>
+      </visual>
+      <visual>
+          <origin xyz="${chassis_radius/2} ${-chassis_radius/2} ${beam_height}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
+          </geometry>
+          <material name="${chassis_color}"/>
+      </visual>
+      <visual>
+          <origin xyz="${-chassis_radius/2} ${chassis_radius/2} ${beam_height}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
+          </geometry>
+          <material name="${chassis_color}"/>
+      </visual>
+      <visual>
+          <origin xyz="${-chassis_radius/2} ${-chassis_radius/2} ${beam_height}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
+          </geometry>
+          <material name="${chassis_color}"/>
+      </visual>
+
+
+      <collision>
+          <origin xyz="0 0 ${beam_height}" rpy="0 0 0"/>
+          <geometry>
+            <cylinder radius="${chassis_radius}" length="${beam_height*2}"/>
+          </geometry>
+      </collision>
+      <xacro:inertial_cylinder mass="${chassis_mass}" length="${chassis_thickness}" radius="${chassis_radius}">
+          <origin xyz="${-chassis_radius/1.5} 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
     </link>
     <gazebo reference="chassis">
+        <!-- <material>Gazebo/DarkGrey</material> -->
         <material>Gazebo/Orange</material>
     </gazebo>
 
@@ -144,7 +198,7 @@
     <joint name="castor_wheel_joint" type="fixed">
         <parent link="base_link"/>
         <child link="castor_wheel"/>
-        <origin xyz="${-chassis_length/2} 0 ${castor_wheel_radius}"/>
+        <origin xyz="${-chassis_radius/1.5} 0 ${castor_wheel_radius}"/>
     </joint>
 
 
@@ -187,11 +241,30 @@
 
 
 
-    <!--  sonar -->
+    <!--  front-sonar -->
     <xacro:insert_sonar
-        base_name="sonar" 
+        base_name="sonar_front" 
         parent_name="chassis" 
-        x="${(chassis_length/6)*2}" y="0" z="${chassis_height/2}"
+        x="${chassis_radius}" y="0" z="${beam_height+0.01}"
+        rx="0" ry="0" rz="0"
+        mass="0.005"
+        min_range="0.02" max_range="3.0"
+        resolution="0.01" visualize="false"/>
+    <!--  left-sonar -->
+    <xacro:insert_sonar
+        base_name="sonar_left" 
+        parent_name="chassis" 
+        x="${chassis_radius*0.7071}" y="${chassis_radius*0.7071}" z="${beam_height+0.01}"
+        rx="0.0" ry="0.0" rz="${pi/4}"
+        mass="0.005"
+        min_range="0.02" max_range="3.0"
+        resolution="0.01" visualize="false"/>
+    <!--  right-sonar -->
+    <xacro:insert_sonar
+        base_name="sonar_right" 
+        parent_name="chassis" 
+        x="${chassis_radius*0.7071}" y="${-chassis_radius*0.7071}" z="${beam_height+0.01}"
+        rx="0.0" ry="0.0" rz="${-pi/4}"
         mass="0.005"
         min_range="0.02" max_range="3.0"
         resolution="0.01" visualize="false"/>
@@ -202,7 +275,7 @@
     <xacro:insert_lidar 
         base_name="lidar" 
         parent_name="chassis" 
-        x="${-chassis_length/3}" y="0" z="${chassis_height+lidar_z_offset}"
+        x="0" y="0" z="${(beam_height*2)+lidar_z_offset}"
         mass="0.1" samples="360"
         min_angle="${-pi*2}" max_angle="${pi*2}"
         min_range="0.1" max_range="10"
@@ -211,25 +284,25 @@
     
 
     <!--  imu -->
-    <!-- <xacro:insert_imu
+    <xacro:insert_imu
         base_name="imu" 
         parent_name="chassis" 
-        x="0" y="0" z="${chassis_height}"/> -->
+        x="0" y="0" z="${beam_height}"/>
 
 
 
     <!-- camera -->
-    <!-- <xacro:property name="cam_x_offset" value="0.04"/>
+    <xacro:property name="cam_x_offset" value="0.04"/>
     <xacro:property name="cam_z_offset" value="0.02"/>
     <xacro:insert_camera
         base_name="camera" 
         parent_name="chassis" 
-        x="${(chassis_length*0.375)+cam_x_offset}" y="0" z="${chassis_height+cam_z_offset}"
+        x="${(chassis_radius)+cam_x_offset}" y="0" z="${(beam_height*2)}"
         mass="0.005"
         width="320" height="240"
         min_range="0.02" max_range="5.0"
         tilt_angle="0"
-        visualize="true"/> -->
+        visualize="false"/>
 
 
 

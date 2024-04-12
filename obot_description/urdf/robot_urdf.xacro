@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="mobo_bot2" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="obot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:include filename="color_macros.xacro" />
     <xacro:include filename="inertia_macros.xacro" />

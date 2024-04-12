@@ -1,4 +1,4 @@
-# mobo_bot
+# obot
 
 > NOTE: development is done in ros2-humble.
 
@@ -6,7 +6,7 @@ clone (git clone git@github.com:samuko-things/mobo_bot.git) or Download
 the repo or in your ROS2 workspace, build all packages, and source it.
 
 ```shell
-colcon build --packages-select mobo_bot_description --symlink-install
+colcon build --packages-select obot_description --symlink-install
 ```
 
 ## Basic Launch
@@ -16,23 +16,23 @@ colcon build --packages-select mobo_bot_description --symlink-install
 ![mobo_obot](./docs/mobo_bot_rviz_view.png)
 
 ```shell
-$ ros2 launch mobo_bot_description rviz.launch.py
+$ ros2 launch obot_description rviz.launch.py
 ```
 
 **to spawn robot in gazebo:**
 
-![mobo_obot](./docs/mobo_bot_gazebo_view.png)
+![obot](./docs/mobo_bot_gazebo_view.png)
 
 ```shell
-$ ros2 launch mobo_bot_description sim.launch.py
+$ ros2 launch obot_description sim.launch.py
 ```
 
 **to spawn robot in gazebo and view in RVIZ simultaneously:**
 
-![mobo_obot](./docs/mobo_bot_sim.gif)
+![mobo_obot](./docs/obot_sim.gif)
 
 ```shell
-$ ros2 launch mobo_bot_description sim_and_rviz.launch.py
+$ ros2 launch obot_description sim_and_rviz.launch.py
 ```
 ---
 you can drive it around using the teleop_twist_keyboard package or you can
