@@ -2,7 +2,6 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 
-    <xacro:include filename="other_parts/box_with_fillet_macro.xacro"/>
     <xacro:include filename="other_parts/drive_wheel_macro.xacro"/>
     <xacro:include filename="other_parts/drive_wheel_rim_macro.xacro"/>
     
@@ -11,14 +10,12 @@
     <xacro:include filename="sensors/imu.xacro"/>
     <xacro:include filename="sensors/cam.xacro"/>
 
-
     <xacro:property name="chassis_radius" value="0.13"/>
     <xacro:property name="chassis_thickness" value="0.005"/>
     <xacro:property name="chassis_mass" value="2.0"/>
-    <xacro:property name="beam_height" value="0.05"/>
+    <xacro:property name="beam_height" value="0.06"/>
     <xacro:property name="beam_radius" value="0.005"/>
     <xacro:property name="chassis_color" value="orange"/>
-
 
     <xacro:property name="wheel_seperation" value="0.22"/>
     <xacro:property name="wheel_radius" value="0.034"/>
@@ -64,21 +61,21 @@
           <geometry>
             <cylinder radius="${chassis_radius}" length="${chassis_thickness}"/>
           </geometry>
-          <material name="${chassis_color}"/>
+          <xacro:material_orange/>
       </visual>
       <visual>
           <origin xyz="0 0 ${beam_height}" rpy="0 0 0"/>
           <geometry>
             <cylinder radius="${chassis_radius}" length="${chassis_thickness}"/>
           </geometry>
-          <material name="${chassis_color}"/>
+          <xacro:material_orange/>
       </visual>
       <visual>
           <origin xyz="0 0 ${beam_height*2}" rpy="0 0 0"/>
           <geometry>
             <cylinder radius="${chassis_radius}" length="${chassis_thickness}"/>
           </geometry>
-          <material name="${chassis_color}"/>
+          <xacro:material_orange/>
       </visual>
 
 
@@ -87,28 +84,28 @@
           <geometry>
             <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
           </geometry>
-          <material name="${chassis_color}"/>
+          <xacro:material_red/>
       </visual>
       <visual>
           <origin xyz="${chassis_radius/2} ${-chassis_radius/2} ${beam_height}" rpy="0 0 0"/>
           <geometry>
             <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
           </geometry>
-          <material name="${chassis_color}"/>
+          <xacro:material_red/>
       </visual>
       <visual>
           <origin xyz="${-chassis_radius/2} ${chassis_radius/2} ${beam_height}" rpy="0 0 0"/>
           <geometry>
             <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
           </geometry>
-          <material name="${chassis_color}"/>
+          <xacro:material_red/>
       </visual>
       <visual>
           <origin xyz="${-chassis_radius/2} ${-chassis_radius/2} ${beam_height}" rpy="0 0 0"/>
           <geometry>
             <cylinder radius="${beam_radius}" length="${beam_height*2}"/>
           </geometry>
-          <material name="${chassis_color}"/>
+          <xacro:material_red/>
       </visual>
 
 
@@ -122,10 +119,6 @@
           <origin xyz="${-chassis_radius/1.5} 0 0" rpy="0 0 0"/>
       </xacro:inertial_cylinder>
     </link>
-    <gazebo reference="chassis">
-        <!-- <material>Gazebo/DarkGrey</material> -->
-        <material>Gazebo/Orange</material>
-    </gazebo>
 
     <!--  ########################### -->
 
@@ -208,7 +201,7 @@
             <geometry>
                 <sphere radius="${castor_wheel_radius}" />
             </geometry>
-            <material name="silver"/>
+            <xacro:material_silver/>
         </visual>
         <collision>
            <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -224,11 +217,6 @@
     <gazebo reference="castor_wheel">
         <mu1>0.001</mu1>
         <mu2>0.001</mu2>
-        <!-- <kp>1000000.0</kp> -->
-        <!-- <kd>1.0</kd> -->
-        <!-- <fdir1>1 0 0</fdir1> -->
-        <!-- <minDepth>0.01</minDepth> -->
-        <material>Gazebo/Silver</material>
     </gazebo>
 
     <!--  ########################### -->

@@ -3,7 +3,7 @@
 
     <xacro:macro name="material_black">
         <material name="black">
-            <color rgba="0.1 0.1 0.1 1"/>
+            <color rgba="0.025 0.025 0.025 1"/>
         </material>
     </xacro:macro>
 
@@ -24,11 +24,6 @@
         <gazebo reference="${name}">
             <mu1>1.0</mu1>
             <mu2>1.0</mu2>
-            <!-- <kp>1000000</kp> -->
-            <!-- <kd>0.001</kd> -->
-            <!-- <minDepth>0.001</minDepth> -->
-            <!-- <fdir1>${fdir}</fdir1> -->
-            <material>Gazebo/FlatBlack</material>
         </gazebo>
     </xacro:macro>
     <!--  ########################### -->

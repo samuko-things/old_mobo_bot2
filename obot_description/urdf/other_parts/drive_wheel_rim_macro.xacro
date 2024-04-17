@@ -57,14 +57,6 @@
 
         </link>
 
-        <!-- <gazebo reference="${base_name}">
-            <material>Gazebo/SkyBlue</material>
-        </gazebo> -->
-
-        <gazebo reference="${base_name}">
-            <material>Gazebo/Red</material>
-        </gazebo>
-
     </xacro:macro>
 
     
