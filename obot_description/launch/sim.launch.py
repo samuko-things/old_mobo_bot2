@@ -42,7 +42,7 @@ def generate_launch_description():
 
     ignition_ros_package = os.path.join(get_package_share_directory("ros_gz_sim"))
     simulation_world_file = os.path.join(pkg_path, "world/empty.sdf")
-    
+    rviz_config_file = os.path.join(pkg_path,'config','robot_view.rviz')
     
     # xacro_file = os.path.join(pkg_path,'urdf','robot_urdf.xacro')
     # robot_description_config= Command(['xacro ', xacro_file, ' use_ros2_control:=', use_ros2_control])
@@ -89,11 +89,15 @@ def generate_launch_description():
     )
         
     ign_bridge_node = Node(
-        package="ros_ign_bridge",
+        package="ros_gz_bridge",
         executable="parameter_bridge",
-        arguments=["/model/obot/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist"], 
+        arguments=["/model/obot/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist",
+                   "/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan",
+                   "/model/obot/odometry@nav_msgs/msg/Odometry@ignition.msgs.Odometry"], 
         # ros_arguments=["-r /model/wheeled_model/cmd_vel:=/cmd_vel"], # Remapping topic in terminal 
-        remappings=[("/model/obot/cmd_vel", "/cmd_vel")], # Remapping topic in launch file
+        remappings=[("/model/obot/cmd_vel", "/cmd_vel"),
+                    ("/lidar", "/laser_scan"),
+                    ("/model/obot/odometry", "/odom")], # Remapping topic in launch file
         output="screen"
     )
 
@@ -112,6 +116,15 @@ def generate_launch_description():
     )
 
 
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', rviz_config_file],
+        output='screen'
+    )
+
+
+
      # Create the launch description and populate
     ld = LaunchDescription()
 
@@ -119,6 +132,7 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time_cmd)
     
     # Add the nodes to the launch description
+    ld.add_action(rviz_node)
     ld.add_action(robot_state_publisher_node)
     ld.add_action(simulation)
     ld.add_action(spawn_robot_after_sim_has_started)
